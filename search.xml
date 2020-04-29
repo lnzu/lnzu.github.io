@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Linux配置flask注意事项</title>
+    <url>/2020/04/29/Linux%E9%85%8D%E7%BD%AEflask%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    <content><![CDATA[<h3 id="Linux配置配置flask时的一些坑"><a href="#Linux配置配置flask时的一些坑" class="headerlink" title="Linux配置配置flask时的一些坑"></a>Linux配置配置flask时的一些坑</h3><p>之前在window上配置python的后端涉及nginx,flask。没什么问题。可到linux上时却出现了不能访问文件。Flask的==url_for(‘’)==函数不能读取静态文件。</p>
+<a id="more"></a>
+
+<h5 id="1-后来先修改了nginx配置文件才能访问静态文件。"><a href="#1-后来先修改了nginx配置文件才能访问静态文件。" class="headerlink" title="1.后来先修改了nginx配置文件才能访问静态文件。"></a>1.后来先修改了nginx配置文件才能访问静态文件。</h5><p>重点是将==try_files $uri $uri/ =404;==给删掉就可以了。</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span> default_server;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">root</span> /var/www/html;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">index</span> index.html index.htm index.nginx-debian.html;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">server_name</span> _;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1:5000;</span><br><span class="line">        <span class="comment">#try_files $uri $uri/ =404;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-不能访问文件加入获取根目录文件的路径"><a href="#2-不能访问文件加入获取根目录文件的路径" class="headerlink" title="2.不能访问文件加入获取根目录文件的路径"></a>2.不能访问文件加入获取根目录文件的路径</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">root_path = os.path.abspath(os.path.dirname(__file__)).split(<span class="string">'shippingSchedule'</span>)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p>后来就能访问了。哈哈</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Python一些技巧</title>
+    <url>/2020/04/29/Python%E4%B8%80%E4%BA%9B%E6%8A%80%E5%B7%A7/</url>
+    <content><![CDATA[<h1 id="python-一些技巧"><a href="#python-一些技巧" class="headerlink" title="python - 一些技巧"></a>python - 一些技巧</h1><h4 id="flask在request中响应时表单提交的数据获取"><a href="#flask在request中响应时表单提交的数据获取" class="headerlink" title="flask在request中响应时表单提交的数据获取"></a>flask在request中响应时表单提交的数据获取</h4><p>请求方法是<strong>GET</strong>时</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">User = request.args.get(<span class="string">"nm"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>请求方法是<strong>POST</strong>时</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">User = request.form[<span class="string">"nm"</span>]</span><br></pre></td></tr></table></figure>
+
+<p>flask获取post请求的数据</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request</span><br><span class="line"></span><br><span class="line">data=request.get_data()</span><br><span class="line"></span><br><span class="line">data= request.data</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h4 id="python-小技巧"><a href="#python-小技巧" class="headerlink" title="python 小技巧"></a>python 小技巧</h4><p>str的转码</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">str.encode(encoding=<span class="string">"utf-8"</span>)</span><br></pre></td></tr></table></figure>
+<p>获取当前运行py所在目录</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">root_path = os.path.abspath(os.path.dirname(__file__)).split(<span class="string">'shippingSchedule'</span>)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>然后导包就可以访问了</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sys.path.append(root_path+<span class="string">'/utils/'</span>)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu笔记</title>
+    <url>/2020/04/29/Ubuntu%E7%AC%94%E8%AE%B0/</url>
+    <content><![CDATA[<h4 id="一、切换python模式至3"><a href="#一、切换python模式至3" class="headerlink" title="一、切换python模式至3"></a><strong>一、切换python模式至3</strong></h4><a id="more"></a>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 100</span><br><span class="line"></span><br><span class="line">sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 150</span><br></pre></td></tr></table></figure>
+<h3 id="改回来"><a href="#改回来" class="headerlink" title="改回来"></a><strong>改回来</strong></h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo update-alternatives --config python</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看python安装前路径"><a href="#查看python安装前路径" class="headerlink" title="查看python安装前路径"></a>查看python安装前路径</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">which python</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt-get install nginx</span><br></pre></td></tr></table></figure>
+<h5 id="nginx命令"><a href="#nginx命令" class="headerlink" title="nginx命令"></a>nginx命令</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">/etc/init.d/nginx stop</span><br><span class="line">/etc/init.d/nginx start</span><br><span class="line">/etc/init.d/nginx reload</span><br></pre></td></tr></table></figure>
+<h5 id="nginx配置文件"><a href="#nginx配置文件" class="headerlink" title="nginx配置文件"></a>nginx配置文件</h5><p>/etc/nginx/sites-available/default</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">	<span class="attribute">listen</span> <span class="number">80</span> default_server;</span><br><span class="line"></span><br><span class="line">	<span class="attribute">root</span> /var/www/html;</span><br><span class="line"></span><br><span class="line">	<span class="attribute">index</span> index.html index.htm index.nginx-debian.html;</span><br><span class="line"></span><br><span class="line">	<span class="attribute">server_name</span> _;</span><br><span class="line"></span><br><span class="line">	<span class="attribute">location</span> / &#123;</span><br><span class="line">		<span class="attribute">proxy_pass</span> http://127.0.0.1:5000;</span><br><span class="line">		<span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ =<span class="number">404</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加开机启动运行py"><a href="#添加开机启动运行py" class="headerlink" title="添加开机启动运行py"></a>添加开机启动运行py</h5><p>将下面的代码添加至 /etc/rc.local中exist之前</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;bin&#x2F;python3 &#x2F;root&#x2F;weixin&#x2F;app.py &gt; &#x2F;root&#x2F;weixin&#x2F;app.log</span><br></pre></td></tr></table></figure>
+
+<h5 id="不间断运行app-py"><a href="#不间断运行app-py" class="headerlink" title="不间断运行app.py"></a>不间断运行app.py</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nohup python /root/weixin/app.py &gt;&gt; /root/weixin/run_app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h4 id="不间断运行-root-weixin-app-py"><a href="#不间断运行-root-weixin-app-py" class="headerlink" title="不间断运行/root/weixin/app.py"></a>不间断运行/root/weixin/app.py</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /root/weixin/</span><br><span class="line">nohup python app.py &gt; run_app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<h5 id="查找进程"><a href="#查找进程" class="headerlink" title="查找进程"></a>查找进程</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ps aux | grep app.py</span><br></pre></td></tr></table></figure>
+
+<h5 id="结束进程"><a href="#结束进程" class="headerlink" title="结束进程"></a>结束进程</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -9 id</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>python解析xml</title>
+    <url>/2020/04/29/python%E8%A7%A3%E6%9E%90xml/</url>
+    <content><![CDATA[<h5 id="python自带的有xml解析库，直接使用就行这里使用的是DOM"><a href="#python自带的有xml解析库，直接使用就行这里使用的是DOM" class="headerlink" title="python自带的有xml解析库，直接使用就行这里使用的是DOM"></a>python自带的有xml解析库，直接使用就行这里使用的是DOM</h5><h5 id="我理解的流程"><a href="#我理解的流程" class="headerlink" title="我理解的流程"></a>我理解的流程</h5><p>1.先导入xml文件获取一个dom_tree后再获取根节点(<em>root_node</em>),然后用此根节点来获取包含的标签名，再通过获取到的标签来获取childNodes的数据。每一层通过上一层的根节点逐渐向下获取标签内容</p>
+<a id="more"></a>
+
+<p>这是weixn.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xml</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ToUserName</span>&gt;</span>to<span class="tag">&lt;/<span class="name">ToUserName</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">FromUserName</span>&gt;</span>from<span class="tag">&lt;/<span class="name">FromUserName</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">CreateTime</span>&gt;</span>1348831860<span class="tag">&lt;/<span class="name">CreateTime</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MsgType</span>&gt;</span>text<span class="tag">&lt;/<span class="name">MsgType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Content</span>&gt;</span>test<span class="tag">&lt;/<span class="name">Content</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MsgId</span>&gt;</span>1234567890123456<span class="tag">&lt;/<span class="name">MsgId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xml</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="1-先导入库"><a href="#1-先导入库" class="headerlink" title="1.先导入库"></a>1.先导入库</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.dom.minidom <span class="keyword">import</span> parse</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-获取DOM树得到根节点"><a href="#2-获取DOM树得到根节点" class="headerlink" title="2.获取DOM树得到根节点"></a>2.获取DOM树得到根节点</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#获取得到dom树分支</span></span><br><span class="line">dom_tree = parse(<span class="string">'weixin.xml'</span>)</span><br><span class="line"><span class="comment">#通过目录树得到根节点</span></span><br><span class="line">root_node = dom_tree.documentElement</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-获取标签后通过标签读取数据"><a href="#3-获取标签后通过标签读取数据" class="headerlink" title="3.获取标签后通过标签读取数据"></a>3.获取标签后通过标签读取数据</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">ToUserName = root_nodes.getElementsByTagName(<span class="string">'ToUserName'</span>)[<span class="number">0</span>]</span><br><span class="line">print(ToUserName.childNodes[<span class="number">0</span>].data)</span><br></pre></td></tr></table></figure>
+<p>这里打印出来的结果是：to</p>
+<h4 id="另一案例"><a href="#另一案例" class="headerlink" title="另一案例"></a>另一案例</h4><p><strong>test.xml</strong></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- This is list of customers --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">lnzu</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">customer</span> <span class="attr">ID</span>=<span class="string">"C001"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Acme Inc.<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">phone</span>&gt;</span>12345<span class="tag">&lt;/<span class="name">phone</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">comments</span>&gt;</span>ui</span><br><span class="line">      &lt;![CDATA[Regular customer since 1995]]&gt;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">comments</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">customer</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">customer</span> <span class="attr">ID</span>=<span class="string">"C002"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Star Wars Inc.<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">phone</span>&gt;</span>23456<span class="tag">&lt;/<span class="name">phone</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">comments</span>&gt;</span>ngjf</span><br><span class="line">      &lt;![CDATA[A small but healthy company.]]&gt;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">comments</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">customer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">lnzu</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>test.py</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> xml.dom.minidom <span class="keyword">import</span> parse</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getTestXml</span><span class="params">()</span>:</span></span><br><span class="line">  dom_tree = parse(<span class="string">'test.xml'</span>)</span><br><span class="line">  </span><br><span class="line">  root_node = dom_tree.documentElement</span><br><span class="line">  </span><br><span class="line">  print(root_node.nodeName)</span><br><span class="line">  </span><br><span class="line">  customers = root_node.getElementsByTagName(<span class="string">"customer"</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> customers:</span><br><span class="line">    print(i.getAttribute(<span class="string">'ID'</span>))</span><br><span class="line">    name = i.getElementsByTagName(<span class="string">'name'</span>)[<span class="number">0</span>]</span><br><span class="line">    print(name.childNodes[<span class="number">0</span>].data)</span><br><span class="line">    phone = i.getElementsByTagName(<span class="string">'phone'</span>)[<span class="number">0</span>]</span><br><span class="line">    print(phone.childNodes[<span class="number">0</span>].data)</span><br><span class="line">    comments = i.getElementsByTagName(<span class="string">'comments'</span>)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>python实现简单的markdown解析器</title>
+    <url>/2020/04/29/python%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84markdown%E8%A7%A3%E6%9E%90%E5%99%A8/</url>
+    <content><![CDATA[<h5 id="利用python实现一个简单的markdown解析器"><a href="#利用python实现一个简单的markdown解析器" class="headerlink" title="利用python实现一个简单的markdown解析器"></a>利用python实现一个简单的markdown解析器</h5><p>只要掌握点正则还是很简单的下面是示例代码</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!coding: utf-8</span><br><span class="line">import re</span><br><span class="line">from flask import Markup</span><br><span class="line"></span><br><span class="line">def conversionMdToFile(path):</span><br><span class="line">  f &#x3D; open(path,&#39;r&#39;,encoding&#x3D;(&#39;utf-8&#39;))</span><br><span class="line">  md_content &#x3D; f.read()</span><br><span class="line">  f.close()</span><br><span class="line">  </span><br><span class="line">  htm &#x3D; md_content</span><br><span class="line">  for i in range(15):</span><br><span class="line">    htm &#x3D; conversionMdToStr(htm)</span><br><span class="line">    </span><br><span class="line">  return htm</span><br><span class="line">  </span><br><span class="line">def conversionMdToStr(md_str):</span><br><span class="line">  #用于得到转化后的html</span><br><span class="line">  html&#x3D;&#39;&#39;</span><br><span class="line">  </span><br><span class="line">  #用于标记&lt;ol&gt;或&lt;ul&gt;</span><br><span class="line">  list_flag&#x3D;&#39;&#39;</span><br><span class="line">  </span><br><span class="line">  #得到每一行文字的元组</span><br><span class="line">  lines &#x3D; md_str.split(&#39;\n&#39;)</span><br><span class="line">  </span><br><span class="line">  #控制区分代码内部或者是外部是否生产段落</span><br><span class="line">  pre_flag &#x3D; &#39;false&#39;</span><br><span class="line">  </span><br><span class="line">  #循环处理每一行</span><br><span class="line">  for lin_index in lines:</span><br><span class="line">    #匹配blockquote</span><br><span class="line">    if re.match(&#39;&gt;\s.*&#39;,lin_index):</span><br><span class="line">      if list_flag &#x3D;&#x3D; &#39;&#39;:</span><br><span class="line">        list_flag &#x3D; &#39;blockquote&#39;</span><br><span class="line">        html+&#x3D;&#39;&lt;blockquote&gt;\n&#39;</span><br><span class="line">      html+&#x3D;&#39;%s&lt;br&#x2F;&gt;\n&#39; %(re.sub(&#39;&gt;\s&#39;,&#39;&#39;,lin_index))</span><br><span class="line">      </span><br><span class="line">    #匹配代码块</span><br></pre></td></tr></table></figure>
+<pre><code>elif re.match(&apos;~{3,6}&apos;,lin_index):
+  if pre_flag == &apos;false&apos;:
+    html+=&apos;&lt;pre class=\&quot;line-numbers\&quot;&gt;&lt;code class=\&quot;language-%s\&quot;&gt;&apos; %(re.sub(&apos;~{3,6}&apos;,&apos;&apos;,lin_index))
+    pre_flag = &apos;true&apos;
+  elif pre_flag == &apos;true&apos;:
+    html+=&apos;&lt;/code&gt;&lt;/pre&gt;\n&apos;
+    pre_flag=&apos;false&apos;
+
+#匹配代码块```
+elif re.match(&apos;`{3,6}&apos;,lin_index):
+  if pre_flag == &apos;false&apos;:
+    html+=&apos;&lt;pre class=\&quot;line-numbers\&quot;&gt;&lt;code class=\&quot;language-%s\&quot;&gt;&apos; %(re.sub(&apos;`{3,6}&apos;,&apos;&apos;,lin_index))
+    pre_flag = &apos;true&apos;
+  elif pre_flag == &apos;true&apos;:
+    html+=&apos;&lt;/code&gt;&lt;/pre&gt;\n&apos;
+    pre_flag=&apos;false&apos;
+
+#匹配生成的代码后部防止2遍循环后内部代码被当成段落
+elif re.match(&apos;(&lt;pre&gt;&lt;code)|(&lt;blockquote&gt;)&apos;,lin_index):
+  html+=lin_index+&apos;\n&apos;
+  pre_flag=&apos;true&apos;
+elif re.match(&apos;(&lt;/pre&gt;&lt;/code&gt;)|(&lt;/blockquote&gt;)&apos;,lin_index):
+  html+=lin_index+&apos;\n&apos;
+  pre_flag=&apos;false&apos;
+
+#匹配ul
+elif re.match(&apos;\*\s.*&apos;,lin_index):
+  if list_flag == &apos;&apos;:
+    list_flag = &apos;ul&apos;
+    html+=&apos;&lt;ul&gt;\n&apos;
+  html+=&apos; &lt;li&gt;%s&lt;/li&gt;&apos; %(re.sub(&apos;\*\s&apos;,&apos;&apos;,lin_index))+&apos;\n&apos;
+
+#匹配ol
+elif re.match(&apos;\d[\.、]\s.*&apos;,lin_index):
+  if list_flag == &apos;&apos;:
+    list_flag = &apos;ol&apos;
+    html+=&apos;&lt;ol&gt;\n&apos;
+  html+=&apos; &lt;li&gt;%s&lt;/li&gt;&apos; %(re.sub(&apos;\d\.\s&apos;,&apos;&apos;,lin_index))+&apos;\n&apos;
+
+#匹配一级标题
+elif re.match(&apos;#\s&apos;,lin_index):
+  s=re.sub(&apos;#\s&apos;,&apos;&apos;,lin_index)
+  html+=&apos;&lt;h1&gt;%s&lt;/h1&gt;\n&apos; %(s)
+
+#匹配二级标题
+elif re.match(&apos;##\s&apos;,lin_index):
+  s=re.sub(&apos;##\s&apos;,&apos;&apos;,lin_index)
+  html+=&apos;&lt;h2&gt;%s&lt;/h2&gt;\n&apos; %(s)
+
+#匹配三标题
+elif re.match(&apos;###\s&apos;,lin_index):
+  s=re.sub(&apos;###\s&apos;,&apos;&apos;,lin_index)
+  html+=&apos;&lt;h3&gt;%s&lt;/h3&gt;\n&apos; %(s)
+
+#匹配四标题
+elif re.match(&apos;####\s&apos;,lin_index):
+  s=re.sub(&apos;####\s&apos;,&apos;&apos;,lin_index)
+  html+=&apos;&lt;h4&gt;%s&lt;/h4&gt;\n&apos; %(s)
+
+#匹配五标题
+elif re.match(&apos;#####\s&apos;,lin_index):
+  s=re.sub(&apos;#####\s&apos;,&apos;&apos;,lin_index)
+  html+=&apos;&lt;h5&gt;%s&lt;/h5&gt;\n&apos; %(s)
+
+#匹配六级标题
+elif re.match(&apos;######\s&apos;,lin_index):
+  s=re.sub(&apos;######\s&apos;,&apos;&apos;,lin_index)
+  html+=&apos;&lt;h6&gt;%s&lt;/h6&gt;\n&apos; %(s)
+
+#匹配粗体-单独一段
+elif re.match(&apos;\*{2}(.*)\*{2}&apos;,lin_index):
+  s=re.sub(&apos;\*{2}&apos;,&apos;&lt;p&gt;&lt;strong&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;\*{2}&apos;,&apos;&lt;/strong&gt;&lt;/p&gt;&apos;,s,1)+&apos;\n&apos;
+#匹配粗体-单独句中
+elif re.search(&apos;\*{2}(.*)\*{2}&apos;,lin_index):
+  s=re.sub(&apos;\*{2}&apos;,&apos;&lt;strong&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;\*{2}&apos;,&apos;&lt;/strong&gt;&apos;,s,1)+&apos;\n&apos;
+
+#匹配斜体-段落
+elif re.match(&apos;\*{1}.*\*{1}&apos;,lin_index):
+  s=re.sub(&apos;\*{1}&apos;,&apos;&lt;p&gt;&lt;em&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;\*{1}&apos;,&apos;&lt;/em&gt;&lt;/p&gt;&apos;,s,1)+&apos;\n&apos;
+#匹配斜体-句中
+elif re.search(&apos;\*{1}.*\*{1}&apos;,lin_index):
+  s=re.sub(&apos;\*{1}&apos;,&apos;&lt;em&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;\*{1}&apos;,&apos;&lt;/em&gt;&apos;,s,1)+&apos;\n&apos;
+
+#匹配删除线-段落
+elif re.match(&apos;~~.*~~&apos;,lin_index):
+  s=re.sub(&apos;~~&apos;,&apos;&lt;p&gt;&lt;del&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;~~&apos;,&apos;&lt;/del&gt;&lt;/p&gt;&apos;,s,1)+&apos;\n&apos;
+#匹配删除线-句中
+elif re.search(&apos;~~.*~~&apos;,lin_index):
+  s=re.sub(&apos;~~&apos;,&apos;&lt;del&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;~~&apos;,&apos;&lt;/del&gt;&apos;,s,1)+&apos;\n&apos;
+
+#匹配下划线-段落
+elif re.match(&apos;__{1}.*__{1}&apos;,lin_index):
+  s=re.sub(&apos;__{1}&apos;,&apos;&lt;p&gt;&lt;u&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;__{1}&apos;,&apos;&lt;/u&gt;&lt;/p&gt;&apos;,s,1)+&apos;\n&apos;
+#匹配下划线-句中
+elif re.search(&apos;__{1}.*__{1}&apos;,lin_index):
+  s=re.sub(&apos;__{1}&apos;,&apos;&lt;u&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;__{1}&apos;,&apos;&lt;/u&gt;&apos;,s,1)+&apos;\n&apos;
+
+#匹配超链接-段落
+elif re.match(&apos;\[.*\]\(.*\)&apos;,lin_index):
+  s=re.findall(&apos;\[(.*)\]&apos;,lin_index)
+  link=re.findall(&apos;\((.*)\)&apos;,lin_index)
+  html+=&apos;&lt;p&gt;&lt;a href=\&quot;%s\&quot;&gt;%s&lt;/a&gt;&lt;/p&gt;&apos; %(link[0],s[0])+&apos;\n&apos;
+
+#匹配超链接-句子内部
+elif re.search(&apos;\[.*\]\(.*\)&apos;,lin_index):
+  s=re.findall(&apos;\[(.*)\]&apos;,lin_index)
+  link=re.findall(&apos;\((.*)\)&apos;,lin_index)
+  href =&apos;&lt;a href=\&quot;%s\&quot;&gt;%s&lt;/a&gt;&apos; %(link[0],s[0])
+  html+=re.sub(&apos;\[.*\]\(.*\)&apos;,href,lin_index,1)+&apos;\n&apos;
+
+#匹配分割线
+elif re.match(&apos;-{3,10}&apos;,lin_index):
+  html+=&apos;&lt;hr/&gt;&apos;+&apos;\n&apos;
+
+#匹配高亮文字-段落
+elif re.match(&apos;==.*==&apos;,lin_index):
+  s=re.sub(&apos;==&apos;,&apos;&lt;p&gt;&lt;mark&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;==&apos;,&apos;&lt;/mark&gt;&lt;/p&gt;&apos;,s,1)+&apos;\n&apos;
+#匹配高亮文字-句子内部
+elif re.search(&apos;==.*==&apos;,lin_index):
+  s=re.sub(&apos;==&apos;,&apos;&lt;mark&gt;&apos;,lin_index,1)
+  html+=re.sub(&apos;==&apos;,&apos;&lt;/mark&gt;&apos;,s,1)+&apos;\n&apos;
+
+#匹配开头是中文或者是字母的段落
+elif re.match(&apos;[a-zA-Z\u4e00-\u9fa5]&apos;,lin_index):
+  if pre_flag == &apos;true&apos;:
+    html+=lin_index+&apos;\n&apos;
+  elif pre_flag == &apos;false&apos;:
+    html+=&apos;&lt;p&gt;%s&lt;/p&gt;&apos; %(lin_index)+&apos;\n&apos;
+
+else:
+  if list_flag != &apos;&apos;:
+    html+=&apos;&lt;/%s&gt;\n&apos; %(list_flag)
+    list_flag=&apos;&apos;
+  else:
+    html+=lin_index+&apos;\n&apos;</code></pre><p>  return html</p>
+<p>#print(conversionMdToFile(‘1.md’))</p>
+<pre><code></code></pre>]]></content>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+</search>
