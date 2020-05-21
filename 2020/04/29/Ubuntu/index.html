@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <title>爱吃竹子的小熊熊</title>
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/jquery.min.js"></script>
+
+  
+<script src="/js/clipboard.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+  
+  <!--这是页头页面-->
+<header class="header">
+  
+  <!--网站标题-->
+  <a href="/" class="header-title">爱吃竹子的小熊熊</a>
+  
+  <!--显示菜单-->
+  <div class="menu">
+     
+      <a href="/">home</a>
+     
+      <a href="/about/">about</a>
+     
+      <a href="/search">search</a>
+     
+      <a href="/tags">tags</a>
+     
+      <a href="/categories">categories</a>
+    
+  </div>
+  
+  <!--如果是文章显示页面关闭网站描述-->
+  
+ 
+</header>
+
+<style>
+</style>
+  <body>
+    <main class="main">
+      <h2 class="post-title">Ubuntu</h2>
+<p>
+创建:<span class="post-time">2020-04-29</
+span>
+标签:
+</p>
+<hr class="post-top-hr"/>
+<div class="post-content">
+  <h4 id="切换python模式至3"><a href="#切换python模式至3" class="headerlink" title="切换python模式至3"></a>切换python模式至3</h4><pre class="line-numbers language-shell"><code class="language-shell">sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 100
+
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 150<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="改回来"><a href="#改回来" class="headerlink" title="改回来"></a>改回来</h3><pre class="line-numbers language-sh"><code class="language-sh">sudo update-alternatives --config python<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="查看python安装前路径"><a href="#查看python安装前路径" class="headerlink" title="查看python安装前路径"></a>查看python安装前路径</h4><pre class="line-numbers language-shell"><code class="language-shell">which python<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h4><pre class="line-numbers language-shell"><code class="language-shell">sudo apt-get install nginx<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h5 id="nginx命令"><a href="#nginx命令" class="headerlink" title="nginx命令"></a>nginx命令</h5><pre class="line-numbers language-shell"><code class="language-shell">/etc/init.d/nginx stop
+/etc/init.d/nginx start
+/etc/init.d/nginx reload<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h5 id="nginx配置文件"><a href="#nginx配置文件" class="headerlink" title="nginx配置文件"></a>nginx配置文件</h5><p>/etc/nginx/sites-available/default</p>
+<pre class="line-numbers language-nginx"><code class="language-nginx"><span class="token keyword">server</span> <span class="token punctuation">{</span>
+    <span class="token keyword">listen</span> <span class="token number">80</span> default_server<span class="token punctuation">;</span>
+
+    <span class="token keyword">root</span> <span class="token operator">/</span>var<span class="token operator">/</span>www<span class="token operator">/</span>html<span class="token punctuation">;</span>
+
+    <span class="token keyword">index</span> <span class="token keyword">index</span><span class="token punctuation">.</span>html <span class="token keyword">index</span><span class="token punctuation">.</span>htm <span class="token keyword">index</span><span class="token punctuation">.</span>nginx<span class="token operator">-</span>debian<span class="token punctuation">.</span>html<span class="token punctuation">;</span>
+
+    <span class="token keyword">server_name</span> _<span class="token punctuation">;</span>
+
+    <span class="token keyword">location</span> <span class="token operator">/</span> <span class="token punctuation">{</span>
+        <span class="token keyword">proxy_pass</span> <span class="token keyword">http</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token number">127.0</span><span class="token punctuation">.</span><span class="token number">0.1</span><span class="token punctuation">:</span><span class="token number">5000</span><span class="token punctuation">;</span>
+        <span class="token keyword">try_files</span> <span class="token variable">$uri</span> <span class="token variable">$uri</span><span class="token operator">/</span> <span class="token operator">=</span><span class="token number">404</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h5 id="添加开机启动运行py"><a href="#添加开机启动运行py" class="headerlink" title="添加开机启动运行py"></a>添加开机启动运行py</h5><p>将下面的代码添加至 /etc/rc.local中exist之前</p>
+<pre><code>/usr/bin/python3 /root/weixin/app.py &gt; /root/weixin/app.log</code></pre><h5 id="不间断运行app-py"><a href="#不间断运行app-py" class="headerlink" title="不间断运行app.py"></a>不间断运行app.py</h5><pre class="line-numbers language-shell"><code class="language-shell">nohup python /root/weixin/app.py >> /root/weixin/run_app.log 2>&1 &<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="不间断运行-root-weixin-app-py"><a href="#不间断运行-root-weixin-app-py" class="headerlink" title="不间断运行/root/weixin/app.py"></a>不间断运行/root/weixin/app.py</h4><pre class="line-numbers language-shell"><code class="language-shell">cd /root/weixin/
+nohup python app.py > run_app.log 2>&1 &<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h5 id="查找进程"><a href="#查找进程" class="headerlink" title="查找进程"></a>查找进程</h5><pre class="line-numbers language-shell"><code class="language-shell">ps aux | grep app.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h5 id="结束进程"><a href="#结束进程" class="headerlink" title="结束进程"></a>结束进程</h5><pre class="line-numbers language-shell"><code class="language-shell">kill -9 id<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+</div>
+
+
+<style>
+
+</style>
+    </main>
+  </body>
+
+  <script>
+   
+  </script>
+
+  <footer>
+power by <a href="">Hexo</a>,theme is <a href="">lnzu</a>
+</footer>
+
+
+<script src="/js/main.js"></script>
+
+
+</html>
